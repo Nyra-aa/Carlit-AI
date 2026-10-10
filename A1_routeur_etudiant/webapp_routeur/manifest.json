@@ -1,0 +1,21 @@
+{
+  "model_name": "DistilCamemBERT",
+  "family": "transformer",
+  "classes": [
+    "Bibliothèque",
+    "Finances et bourses",
+    "Informatique",
+    "International",
+    "Logement",
+    "Scolarité",
+    "Stages et alternance",
+    "Vie étudiante"
+  ],
+  "files": {
+    "model_dir": "."
+  },
+  "input": {
+    "type": "text",
+    "vectorization": "transformers_js"
+  }
+}
