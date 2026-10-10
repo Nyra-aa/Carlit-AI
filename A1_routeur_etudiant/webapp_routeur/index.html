@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Routeur de demandes étudiantes</title>
+<link rel="icon" href="data:," />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <header class="board-header">
+    <p class="eyebrow"><span class="dot"></span>A1 — INFÉRENCE 100% NAVIGATEUR, AUCUN SERVEUR</p>
+    <h1>Routeur de demandes étudiantes</h1>
+    <p>Écrivez votre message ou déposez un fichier : le modèle s'exécute localement, dans votre navigateur — vos messages ne sont jamais envoyés à un serveur.</p>
+  </header>
+
+  <div id="model-status" class="model-status loading">
+    <span class="led"></span><span class="status-text">Initialisation...</span>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn" role="tab" aria-selected="true" data-target="tab-single">Message unique</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-target="tab-batch">Fichier (lot)</button>
+  </div>
+
+  <section id="tab-single" class="tab-panel active">
+    <div class="panel">
+      <label for="single-input">Votre message</label>
+      <textarea id="single-input" placeholder="Ex. : Bonjour, je n'ai toujours pas reçu ma convocation pour les examens de janvier, pouvez-vous vérifier ?"></textarea>
+      <button id="single-submit" class="primary-btn" disabled>Identifier le service</button>
+    </div>
+    <div class="board" id="single-board" aria-live="polite"></div>
+  </section>
+
+  <section id="tab-batch" class="tab-panel">
+    <div class="panel">
+      <label>Fichier .txt (un message par ligne) ou .csv (colonne "text")</label>
+      <div id="dropzone" class="dropzone">
+        <div>Cliquez ou déposez un fichier ici</div>
+        <div class="filename"></div>
+        <input type="file" id="file-input" accept=".txt,.csv" />
+      </div>
+      <div class="batch-actions">
+        <button id="batch-submit" class="primary-btn" disabled>Traiter le fichier</button>
+        <button id="export-btn" class="secondary-btn" disabled>Exporter en CSV</button>
+      </div>
+      <div id="progress-wrap" class="progress-line" style="display:none;">
+        <div id="progress-bar" class="bar"></div>
+      </div>
+    </div>
+    <div id="batch-results" class="panel" style="margin-top:1rem;">
+      <p class="empty-state">Aucun résultat pour le moment.</p>
+    </div>
+  </section>
+
+  <footer class="about">
+    <span><strong>Modèle :</strong> sélectionné et exporté automatiquement par le pipeline (voir manifest.json)</span>
+    <span><strong>Exécution :</strong> ONNX Runtime Web, en local</span>
+    <span><strong>Coût serveur :</strong> nul — fichiers statiques uniquement</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.30.0/dist/ort.min.js"></script>
+<script src="tfidf.js"></script>
+<script src="bilstm_tokenizer.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

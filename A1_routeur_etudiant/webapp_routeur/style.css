@@ -1,0 +1,469 @@
+:root {
+  --bg: #12161d;
+  --panel: #1b212b;
+  --panel-raised: #232b37;
+  --seam: #2c3542;
+  --text: #edeff3;
+  --text-dim: #8891a0;
+  --text-faint: #5b6472;
+  --accent: #e8a33d;
+  --accent-dim: #4a3d24;
+  --accent-text: #1a1305;
+  --danger: #d97757;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px) 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: "Space Mono", "JetBrains Mono", ui-monospace, monospace;
+}
+
+a {
+  color: var(--accent);
+}
+
+button {
+  font-family: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Layout ---------- */
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+header.board-header {
+  border: 1px solid var(--seam);
+  border-radius: 6px;
+  background: var(--panel);
+  padding: 1.5rem 1.5rem 1.35rem;
+  margin-bottom: 1.75rem;
+}
+
+.board-header .eyebrow {
+  font-family: "Space Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  margin: 0 0 0.6rem;
+}
+
+.board-header .eyebrow .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-right: 0.5em;
+}
+
+.board-header h1 {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-size: clamp(1.55rem, 4.4vw, 2.05rem);
+  letter-spacing: -0.01em;
+  margin: 0 0 0.55rem;
+  line-height: 1.15;
+}
+
+.board-header p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.96rem;
+  max-width: 60ch;
+}
+
+/* ---------- Tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.tab-btn {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--seam);
+  color: var(--text-dim);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.tab-btn[aria-selected="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* ---------- Panels ---------- */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--seam);
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.panel + .panel {
+  margin-top: 1rem;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+textarea {
+  width: 100%;
+  min-height: 110px;
+  background: var(--bg);
+  border: 1px solid var(--seam);
+  border-radius: 5px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.98rem;
+  padding: 0.85rem;
+  resize: vertical;
+}
+
+.primary-btn {
+  margin-top: 1rem;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  border-radius: 5px;
+  padding: 0.75rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.12s ease;
+}
+
+.primary-btn:hover {
+  filter: brightness(1.08);
+}
+
+.primary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.secondary-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--seam);
+  border-radius: 5px;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  border-color: var(--text-dim);
+}
+
+/* ---------- Model status ---------- */
+
+.model-status {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.model-status .led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+.model-status.ready .led {
+  background: #6fbf73;
+  box-shadow: 0 0 6px #6fbf7399;
+}
+
+.model-status.loading .led {
+  background: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.model-status.error .led {
+  background: var(--danger);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ---------- Result board ---------- */
+
+.board {
+  margin-top: 1.25rem;
+}
+
+.flap-row {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 5px;
+  border: 1px solid var(--seam);
+  background: var(--panel-raised);
+}
+
+.flap-row + .flap-row {
+  margin-top: 0.5rem;
+}
+
+.flap-row.primary {
+  border-color: var(--accent);
+  background: linear-gradient(180deg, var(--accent-dim), var(--panel-raised) 70%);
+}
+
+.flap-row .rank {
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.flap-row.primary .rank {
+  color: var(--accent);
+}
+
+.flap-row .service {
+  font-family: "Space Mono", monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.flap-row:not(.primary) .service {
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.flap-row .confidence {
+  font-family: "Space Mono", monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.flap-row.primary .confidence {
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@keyframes flapIn {
+  from { opacity: 0; transform: translateY(-6px) scaleY(0.94); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flap-row.animate {
+    animation: flapIn 0.32s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
+}
+
+/* ---------- Batch mode ---------- */
+
+.dropzone {
+  border: 1.5px dashed var(--seam);
+  border-radius: 6px;
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.dropzone input {
+  display: none;
+}
+
+.dropzone .filename {
+  color: var(--text);
+  font-family: "Space Mono", monospace;
+  margin-top: 0.4rem;
+}
+
+.progress-line {
+  height: 3px;
+  background: var(--seam);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.progress-line .bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.15s ease;
+}
+
+.batch-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+table.results {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.86rem;
+}
+
+table.results th {
+  text-align: left;
+  font-family: "Space Mono", monospace;
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  font-weight: 400;
+  padding: 0 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--seam);
+}
+
+table.results td {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--seam);
+  vertical-align: top;
+}
+
+table.results tr:last-child td {
+  border-bottom: none;
+}
+
+table.results .msg-cell {
+  color: var(--text-dim);
+  max-width: 0;
+  width: 46%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+table.results .service-cell {
+  font-family: "Space Mono", monospace;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+table.results .conf-cell {
+  font-family: "Space Mono", monospace;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.empty-state {
+  color: var(--text-faint);
+  font-size: 0.88rem;
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+}
+
+/* ---------- Footer / about ---------- */
+
+footer.about {
+  margin-top: 1.75rem;
+  border-top: 1px solid var(--seam);
+  padding-top: 1.1rem;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+}
+
+footer.about strong {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .wrap {
+    padding: 1.5rem 1rem 3rem;
+  }
+  .flap-row {
+    grid-template-columns: 2rem 1fr auto;
+    gap: 0.6rem;
+  }
+  table.results .msg-cell {
+    max-width: 120px;
+  }
+}
