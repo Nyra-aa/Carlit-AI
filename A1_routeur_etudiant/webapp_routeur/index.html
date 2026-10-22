@@ -3,71 +3,172 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Routeur de demandes étudiantes</title>
-<link rel="icon" href="data:," />
+<title>Carlit'AI - Routeur de demandes étudiantes</title>
+<link rel="icon" href="./IMAGES/Carlita.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="wrap">
 
-  <header class="board-header">
-    <p class="eyebrow"><span class="dot"></span>A1 — INFÉRENCE 100% NAVIGATEUR, AUCUN SERVEUR</p>
-    <h1>Routeur de demandes étudiantes</h1>
-    <p>Écrivez votre message ou déposez un fichier : le modèle s'exécute localement, dans votre navigateur — vos messages ne sont jamais envoyés à un serveur.</p>
-  </header>
+<div class="app-layout">
 
-  <div id="model-status" class="model-status loading">
-    <span class="led"></span><span class="status-text">Initialisation...</span>
-  </div>
-
-  <div class="tabs" role="tablist">
-    <button class="tab-btn" role="tab" aria-selected="true" data-target="tab-single">Message unique</button>
-    <button class="tab-btn" role="tab" aria-selected="false" data-target="tab-batch">Fichier (lot)</button>
-  </div>
-
-  <section id="tab-single" class="tab-panel active">
-    <div class="panel">
-      <label for="single-input">Votre message</label>
-      <textarea id="single-input" placeholder="Ex. : Bonjour, je n'ai toujours pas reçu ma convocation pour les examens de janvier, pouvez-vous vérifier ?"></textarea>
-      <button id="single-submit" class="primary-btn" disabled>Identifier le service</button>
-    </div>
-    <div class="board" id="single-board" aria-live="polite"></div>
-  </section>
-
-  <section id="tab-batch" class="tab-panel">
-    <div class="panel">
-      <label>Fichier .txt (un message par ligne) ou .csv (colonne "text")</label>
-      <div id="dropzone" class="dropzone">
-        <div>Cliquez ou déposez un fichier ici</div>
-        <div class="filename"></div>
-        <input type="file" id="file-input" accept=".txt,.csv" />
+  <!-- Sidebar latérale -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="chat-header-avatar">
+        <img src="./IMAGES/Carlita.jpg" alt="Avatar de Carlita" class="bot-avatar" />
+        <span class="online-indicator"></span>
       </div>
-      <div class="batch-actions">
-        <button id="batch-submit" class="primary-btn" disabled>Traiter le fichier</button>
-        <button id="export-btn" class="secondary-btn" disabled>Exporter en CSV</button>
-      </div>
-      <div id="progress-wrap" class="progress-line" style="display:none;">
-        <div id="progress-bar" class="bar"></div>
+      <div class="bot-info">
+        <h1>Carlit'AI <span class="badge-local">Local</span></h1>
+        <p class="subtitle">Assistante Virtuelle</p>
       </div>
     </div>
-    <div id="batch-results" class="panel" style="margin-top:1rem;">
-      <p class="empty-state">Aucun résultat pour le moment.</p>
-    </div>
-  </section>
 
-  <footer class="about">
-    <span><strong>Modèle :</strong> sélectionné et exporté automatiquement par le pipeline (voir manifest.json)</span>
-    <span><strong>Exécution :</strong> ONNX Runtime Web, en local</span>
-    <span><strong>Coût serveur :</strong> nul — fichiers statiques uniquement</span>
-  </footer>
+    <div id="model-status" class="model-status loading">
+      <span class="led"></span><span class="status-text">Initialisation...</span>
+    </div>
+
+    <!-- Navigation Onglets -->
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" role="tab" aria-selected="true" data-target="tab-single">
+        <svg class="tab-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        Discussion
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-target="tab-batch">
+        <svg class="tab-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Traitement par fichier
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <footer class="about">
+        <div><strong>Modèle :</strong> pipeline local (manifest.json)</div>
+        <div><strong>Moteur :</strong> ONNX Runtime Web</div>
+        <div><strong>Confidentialité :</strong> 100% navigateur</div>
+      </footer>
+    </div>
+  </aside>
+
+  <!-- Zone de contenu principal plein écran -->
+  <main class="main-content">
+
+    <!-- Onglet 1 : Discussion Chat -->
+    <section id="tab-single" class="tab-panel active">
+      <div class="chat-viewport">
+        <!-- En-tête interne avec Avatar et Nom du site -->
+        <header class="content-top-header">
+          <div class="header-profile">
+            <img src="./IMAGES/Carlita.jpg" alt="Carlita" class="mini-avatar-header" />
+            <div>
+              <h2>Routeur de demandes étudiantes</h2>
+              <p>Propulsé par Carlit'AI — Inférence locale instantanée</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="messages-container">
+          <!-- Message d'accueil Carlita -->
+          <div class="chat-row bot-row">
+            <img src="./IMAGES/Carlita.jpg" alt="Carlita" class="mini-avatar" />
+            <div class="chat-bubble bot-bubble">
+              <p>Bonjour ! Je suis <strong>Carlit'AI</strong>, votre assistante d'orientation.</p>
+              <p>Saisissez votre demande ci-dessous : je vais l'analyser directement dans votre navigateur pour déterminer instantanément le service concerné.</p>
+            </div>
+          </div>
+
+          <!-- Zone d'affichage des résultats -->
+          <div class="board" id="single-board" aria-live="polite"></div>
+        </div>
+
+        <!-- Zone de saisie ancrée en bas -->
+        <div class="chat-input-wrapper">
+          <div class="input-card">
+            <label for="single-input" class="sr-only">Votre message</label>
+            <textarea id="single-input" rows="2" placeholder="Écrivez votre message ici... (Ex: Problème de bourses, inscription...)"></textarea>
+            <button id="single-submit" class="primary-btn" disabled>
+              <span>Envoyer</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Onglet 2 : Traitement de fichier -->
+    <section id="tab-batch" class="tab-panel">
+      <div class="batch-viewport">
+        <!-- En-tête interne pour le second onglet -->
+        <header class="content-top-header">
+          <div class="header-profile">
+            <img src="./IMAGES/Carlita.jpg" alt="Carlita" class="mini-avatar-header" />
+            <div>
+              <h2>Traitement par lot (Fichiers)</h2>
+              <p>Analysez plusieurs requêtes simultanément en local</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="batch-body">
+          <div class="batch-header-desc">
+            <p>Importez un fichier <code>.txt</code> (un message par ligne) ou <code>.csv</code> (colonne "text") pour classifier des listes entières.</p>
+          </div>
+
+          <div class="panel">
+            <div id="dropzone" class="dropzone">
+              <div class="dropzone-icon">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              </div>
+              <div class="drop-text">Glissez-déposez votre fichier ici ou cliquez pour parcourir</div>
+              <div class="filename"></div>
+              <input type="file" id="file-input" accept=".txt,.csv" />
+            </div>
+
+            <div class="batch-actions">
+              <button id="batch-submit" class="primary-btn" disabled>Traiter le fichier</button>
+              <button id="export-btn" class="secondary-btn" disabled>Exporter en CSV</button>
+            </div>
+
+            <div id="progress-wrap" class="progress-line" style="display:none;">
+              <div id="progress-bar" class="bar"></div>
+            </div>
+          </div>
+
+          <div id="batch-results" class="panel" style="margin-top: 1.25rem;">
+            <p class="empty-state">Aucun résultat pour le moment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.30.0/dist/ort.min.js"></script>
 <script src="tfidf.js"></script>
 <script src="bilstm_tokenizer.js"></script>
 <script src="app.js"></script>
+
+<script>
+  // gestion propre des onglets
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      const targetId = btn.getAttribute('data-target');
+      document.getElementById(targetId).classList.add('active');
+    });
+  });
+</script>
+
 </body>
 </html>
