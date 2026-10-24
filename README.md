@@ -1,3 +1,6 @@
+lien vers le projet A1 : https://carlit-ai.netlify.app/
+Routeur de demandes étudiantes
+ 
 # Carlit'AI - Chatbot RAG FGES
 
 > **Carlit'AI** est un assistant virtuel intelligent reposant sur une architecture **RAG** (Retrieval-Augmented Generation). Il est spécialement conçu pour répondre de manière précise et contrainte aux questions des étudiants et visiteurs concernant la documentation et les informations du site de la **FGES** (Faculté de Gestion, Économie & Sciences).
