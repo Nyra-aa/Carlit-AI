@@ -1,0 +1,9 @@
+streamlit>=1.50
+transformers
+peft
+accelerate
+bitsandbytes
+sentence-transformers
+faiss-cpu
+numpy
+pandas
