@@ -39,19 +39,199 @@ CONFIG_LABEL = {"C": "Configuration C — Qwen + RAG + adaptateur QLoRA", "B": "
 
 def logo(size=34):
     return (f'<svg width="{size}" height="{size}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-            '<path d="M32 4 52 12v16c0 14-8.5 25-20 32C20.5 53 12 42 12 28V12z" fill="#0F766E"/>'
-            '<path d="M22 31l7 7 14-15" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+            '<path d="M32 4 52 12v16c0 14-8.5 25-20 32C20.5 53 12 42 12 28V12z" fill="var(--b1-accent)"/>'
+            '<path d="M22 31l7 7 14-15" fill="none" stroke="var(--b1-bg)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
-st.set_page_config(page_title=f"{APP_NAME} — assistant CNIL", page_icon="🛡️", layout="wide", initial_sidebar_state="expanded")
-st.markdown("""<style>
-.block-container {max-width: 860px; padding-top: 2rem;}
-[data-testid="stSidebar"] .stButton > button {text-align: left; justify-content: flex-start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-.brand {display:flex; align-items:center; gap:.6rem; margin-bottom:.4rem;}
-.brand b {font-size:1.25rem;} .brand span {display:block; font-size:.75rem; opacity:.7;}
-.group {font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; opacity:.6; margin:.9rem 0 .2rem;}
-.hero {text-align:center; margin: 2.5rem 0 1.2rem;} .hero h1 {font-size:2rem; margin:.3rem 0;}
+st.set_page_config(page_title=f"{APP_NAME} - assistant CNIL", layout="wide", initial_sidebar_state="expanded")
+st.markdown("""
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+    --b1-bg: #0b0f15;
+    --b1-sidebar: #121821;
+    --b1-panel: #18202c;
+    --b1-raised: #202a3a;
+    --b1-border: #2a374a;
+    --b1-muted: #9aa4b2;
+    --b1-accent: #f59e0b;
+    --b1-accent-dim: #3d2b0f;
+    --b1-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --b1-mono: 'Space Mono', monospace;
+}
+[data-testid="stAppViewContainer"], [data-testid="stSidebar"] {
+    font-family: var(--b1-sans);
+}
+code, pre, .brand b, .badge-rag, .status-pill, .header-profile h2, .group, .hero h1, .sidebar-meta {
+    font-family: var(--b1-mono);
+}
+.block-container {
+    max-width: 950px;
+    padding-top: 4.5rem;
+    padding-bottom: 5rem;
+}
+[data-testid="stSidebar"] {
+    border-right: 1px solid var(--b1-border);
+}
+.stButton > button {
+    border-radius: 10px;
+    font-family: var(--b1-sans);
+}
+[data-testid="stSidebar"] .stButton > button {
+    text-align: left;
+    justify-content: flex-start;
+}
+.stButton > button[kind="secondary"] {
+    background: var(--b1-panel);
+    border-color: var(--b1-border);
+}
+.stButton > button[kind="secondary"]:hover {
+    background: var(--b1-raised);
+    border-color: var(--b1-accent);
+    color: var(--b1-accent);
+}
+.stButton > button[kind="primary"], [data-testid="stChatInputSubmitButton"]:not(:disabled) {
+    background: var(--b1-accent);
+    color: var(--b1-bg);
+}
+.stButton > button[kind="primary"]:hover, [data-testid="stChatInputSubmitButton"]:not(:disabled):hover {
+    filter: brightness(1.1);
+}
+.stButton > button:focus-visible, [data-testid="stChatInputSubmitButton"]:focus-visible {
+    outline: 2px solid var(--b1-accent);
+    outline-offset: 2px;
+}
+.brand {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding-bottom: .9rem;
+    border-bottom: 1px solid var(--b1-border);
+    margin-bottom: .5rem;
+}
+.brand svg, .header-profile svg, .hero svg {
+    box-sizing: content-box;
+    flex-shrink: 0;
+    padding: .3rem;
+    border: 1px solid var(--b1-accent);
+    border-radius: 50%;
+    background: var(--b1-accent-dim);
+}
+.brand b {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+.brand div > span {
+    display: block;
+    font-size: .75rem;
+    color: var(--b1-muted);
+}
+.badge-rag {
+    display: inline-block;
+    font-size: .65rem;
+    font-weight: 700;
+    padding: .1rem .4rem;
+    border-radius: 999px;
+    background: var(--b1-accent-dim);
+    border: 1px solid var(--b1-accent);
+    color: var(--b1-accent);
+    vertical-align: middle;
+    margin-left: .25rem;
+}
+.status-pill {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .72rem;
+    padding: .55rem .75rem;
+    border-radius: 10px;
+    background: var(--b1-panel);
+    border: 1px solid var(--b1-border);
+    color: var(--b1-muted);
+    margin: .5rem 0 .75rem;
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--b1-accent);
+    flex-shrink: 0;
+}
+.content-top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    padding: .75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--b1-border);
+    background: var(--b1-sidebar);
+    margin-bottom: 1.1rem;
+}
+.header-profile {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+.header-profile h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+.header-profile p {
+    margin: .1rem 0 0;
+    font-size: .78rem;
+    color: var(--b1-muted);
+}
+.group {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--b1-muted);
+    margin: .9rem 0 .25rem;
+}
+.hero {
+    text-align: center;
+    padding: 2rem 1.5rem 1.5rem;
+    margin: 1.25rem 0 1rem;
+    border-radius: 14px;
+    border: 1px solid var(--b1-border);
+    background: var(--b1-panel);
+}
+.hero h1 {
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin: .45rem 0 .35rem;
+}
+.hero-sub {
+    max-width: 620px;
+    margin: 0 auto;
+    font-size: .95rem;
+    color: var(--b1-muted);
+}
+.sidebar-meta {
+    font-size: .68rem;
+    color: var(--b1-muted);
+    line-height: 1.45;
+    margin-top: .5rem;
+}
+[data-testid="stChatMessage"] {
+    background: var(--b1-panel);
+    border: 1px solid var(--b1-border);
+    border-radius: 6px 20px 20px 20px;
+}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+    background: var(--b1-raised);
+}
+[data-testid="stChatInput"] {
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+}
 footer {visibility: hidden;}
-</style>""", unsafe_allow_html=True)
+</style>
+""", unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------------- ressources partagées (chargées une seule fois par serveur)
 @st.cache_resource
@@ -127,7 +307,15 @@ def settings_dialog():
 
 # ----------------------------------------------------------------------------- barre latérale
 with st.sidebar:
-    st.markdown(f'<div class="brand">{logo()}<div><b>{APP_NAME}</b><span>{TAGLINE}</span></div></div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="brand">{logo()}<div><b>{APP_NAME} <span class="badge-rag">RAG</span></b><span>{TAGLINE}</span></div></div>',
+        unsafe_allow_html=True,
+    )
+    active_cfg_short = "Config C · QLoRA" if st.session_state.config == "C" else "Config B · Base"
+    st.markdown(
+        f'<div class="status-pill"><span class="status-dot"></span><span>{active_cfg_short}</span></div>',
+        unsafe_allow_html=True,
+    )
     st.button("＋ Nouvelle conversation", width="stretch", type="primary", on_click=lambda: st.session_state.update(current_id=None))
     if store.warning:
         st.warning(store.warning)
@@ -150,6 +338,10 @@ with st.sidebar:
     st.divider()
     if st.button("⚙️ Paramètres du modèle", width="stretch"):
         settings_dialog()
+    st.markdown(
+        '<div class="sidebar-meta">Source : Guide CNIL RGPD<br/>Pipeline : rag_core · bundle vérifié</div>',
+        unsafe_allow_html=True,
+    )
 
 # ----------------------------------------------------------------------------- système (modèle + index)
 try:
@@ -257,7 +449,12 @@ cid = st.session_state.current_id
 conv = store.get(cid) if cid else None
 if conv is None:
     st.session_state.current_id = None
-    st.markdown(f'<div class="hero">{logo(56)}<h1>{APP_NAME}</h1><div>Posez vos questions sur la sécurité des données personnelles : '
+    st.markdown(
+        f'<div class="content-top-header"><div class="header-profile">{logo(32)}<div><h2>{APP_NAME} — {TAGLINE}</h2>'
+        f'<p>Réponses sourcées sur le guide pratique RGPD de la CNIL</p></div></div></div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(f'<div class="hero">{logo(56)}<h1>{APP_NAME}</h1><div class="hero-sub">Posez vos questions sur la sécurité des données personnelles : '
                 "les réponses s'appuient uniquement sur le guide pratique RGPD de la CNIL et citent leurs sources.</div></div>", unsafe_allow_html=True)
     st.caption("Si le guide ne contient pas l'information, l'assistant le dit au lieu d'inventer. Chaque question est traitée indépendamment (pas de mémoire des échanges précédents). "
                "Prototype académique : ne remplace ni la lecture du guide ni un avis juridique.")
@@ -266,7 +463,11 @@ if conv is None:
         if cols[i % 2].button(s, key=f"sug_{i}", width="stretch"):
             st.session_state.queued_question = s; st.rerun()
 else:
-    st.subheader(conv["title"])
+    st.markdown(
+        f'<div class="content-top-header"><div class="header-profile">{logo(32)}<div><h2>{esc(conv["title"])}</h2>'
+        f'<p>{APP_NAME} · {CONFIG_LABEL.get(st.session_state.config, st.session_state.config)}</p></div></div></div>',
+        unsafe_allow_html=True,
+    )
     for i, m in enumerate(conv["messages"]):
         with st.chat_message(m["role"], avatar=None if m["role"] == "user" else "🛡️"):
             if m["role"] == "user":
